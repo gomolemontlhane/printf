@@ -1,6 +1,6 @@
 #include "main.h"
 #include <stdarg.h>
-#include <stdio.h>
+#include <unistd.h>
 
 /**
  *_printf - Produces output according to a format.
@@ -54,11 +54,11 @@ int _printf(const char *format, ...)
  *putchar - Writes a character to stdout.
  *@c: The character to be written.
  *
- *Return: 1 (success), EOF (failure)
+ *Return: The character written (success), EOF (failure)
  */
 int putchar(int c)
 {
-	return (write(1, &c, 1));
+	return write(1, &c, 1);
 }
 
 /**
