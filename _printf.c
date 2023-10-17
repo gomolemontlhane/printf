@@ -58,7 +58,7 @@ int _printf(const char *format, ...)
  */
 int putchar(int c)
 {
-	return write(1, &c, 1);
+	return (write(1, &c, 1));
 }
 
 /**
