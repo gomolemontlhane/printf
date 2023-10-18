@@ -2,6 +2,9 @@
 #include <stdarg.h>
 #include <unistd.h>
 
+/*Function prototypes */
+int handle_format_specifier(char specifier, va_list args);
+
 /**
  *_printf - Produces output according to a format.
  *@format: Format string containing zero or more directives.
@@ -36,12 +39,13 @@ int _printf(const char *format, ...)
 	va_end(args);
 	return (count);
 }
+
 /**
- * handle_format_specifier - Handles the logic for a specific format specifier.
- * @specifier: The format specifier to handle.
- * @args: The va_list of arguments.
+ *handle_format_specifier - Handles the logic for a specific format specifier.
+ *@specifier: The format specifier to handle.
+ *@args: The va_list of arguments.
  *
- * Return: Number of characters printed.
+ *Return: Number of characters printed.
  */
 int handle_format_specifier(char specifier, va_list args)
 {
@@ -69,9 +73,67 @@ int handle_format_specifier(char specifier, va_list args)
 	return (count);
 }
 
-/*Rest of the code remains unchanged */
+/**
+ *putchar - Writes a character to stdout.
+ *@c: The character to be written.
+ *
+ *Return: The character written (success), EOF (failure).
+ */
+int putchar(int c)
+{
+	return (write(1, &c, 1));
+}
 
-/*Function prototypes */
-int putchar(int c);
-int print_str(char *str);
-int print_int(int num);
+/**
+ *print_str - Writes a string to stdout.
+ *@str: The string to be written.
+ *
+ *Return: Number of characters written.
+ */
+int print_str(char *str)
+{
+	int count = 0;
+
+	if (!str)
+		str = "(null)";
+
+	while (*str)
+	{
+		count += putchar(*str);
+		++str;
+	}
+
+	return (count);
+}
+
+/**
+ *print_int - Writes an integer to stdout.
+ *@num: The integer to be written.
+ *
+ *Return: Number of characters written.
+ */
+int print_int(int num)
+{
+	int count = 0;
+	int temp, digits;
+
+	if (num < 0)
+	{
+		count += putchar('-');
+		num = -num;
+	}
+
+	temp = num;
+	digits = 1;
+	while (temp /= 10)
+		digits *= 10;
+
+	while (digits)
+	{
+		count += putchar(num / digits + '0');
+		num %= digits;
+		digits /= 10;
+	}
+
+	return (count);
+}
