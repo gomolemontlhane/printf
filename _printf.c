@@ -1,6 +1,4 @@
 #include "main.h"
-#include <stdarg.h>
-#include <unistd.h>
 
 /**
  *_printf - Produces output according to a format.
@@ -25,60 +23,14 @@ int _printf(const char *format, ...)
 		{ ++ptr; /*Move to the character after '%' */
 			if (*ptr == '\0')
 				break; /*Invalid format */
-			switch (*ptr)
-			{
-				case 'c':
-					count += putchar(va_arg(args, int));
-					break;
-				case 's':
-					count += print_str(va_arg(args, char *));
-					break;
-				case '%':
-					count += putchar('%');
-					break;
-				default:
-					count += putchar('%') + putchar(*ptr);
-			}
+			count += handle_specifier(*ptr, args);
 		}
 		else
 		{
-			count += putchar(*ptr);
+			count += print_char(*ptr);
 		}
 	}
 
 	va_end(args);
-	return (count);
-}
-
-/**
- *putchar - Writes a character to stdout.
- *@c: The character to be written.
- *
- *Return: The character written (success), EOF (failure)
- */
-int putchar(int c)
-{
-	return (write(1, &c, 1));
-}
-
-/**
- *print_str - Writes a string to stdout.
- *@str: The string to be written.
- *
- *Return: Number of characters written.
- */
-int print_str(char *str)
-{
-	int count = 0;
-
-	if (!str)
-		str = "(null)";
-
-	while (*str)
-	{
-		count += putchar(*str);
-		++str;
-	}
-
 	return (count);
 }
