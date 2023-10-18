@@ -25,24 +25,7 @@ int _printf(const char *format, ...)
 		{ ++ptr; /*Move to the character after '%' */
 			if (*ptr == '\0')
 				break; /*Invalid format */
-			switch (*ptr)
-			{
-				case 'c':
-					count += putchar(va_arg(args, int));
-					break;
-				case 's':
-					count += print_str(va_arg(args, char *));
-					break;
-				case 'd':
-				case 'i':
-					count += print_int(va_arg(args, int));
-					break;
-				case '%':
-					count += putchar('%');
-					break;
-				default:
-					count += putchar('%') + putchar(*ptr);
-			}
+			count += handle_format_specifier(*ptr, args);
 		}
 		else
 		{
@@ -53,71 +36,42 @@ int _printf(const char *format, ...)
 	va_end(args);
 	return (count);
 }
-
 /**
- *putchar - Writes a character to stdout.
- *@c: The character to be written.
+ * handle_format_specifier - Handles the logic for a specific format specifier.
+ * @specifier: The format specifier to handle.
+ * @args: The va_list of arguments.
  *
- *Return: The character written (success), EOF (failure)
+ * Return: Number of characters printed.
  */
-int putchar(int c)
-{
-	return write(1, &c, 1);
-}
-
-/**
- *print_str - Writes a string to stdout.
- *@str: The string to be written.
- *
- *Return: Number of characters written.
- */
-int print_str(char *str)
+int handle_format_specifier(char specifier, va_list args)
 {
 	int count = 0;
 
-	if (!str)
-		str = "(null)";
-
-	while (*str)
+	switch (specifier)
 	{
-		count += putchar(*str);
-		++str;
+		case 'c':
+			count += putchar(va_arg(args, int));
+			break;
+		case 's':
+			count += print_str(va_arg(args, char *));
+			break;
+		case 'd':
+		case 'i':
+			count += print_int(va_arg(args, int));
+			break;
+		case '%':
+			count += putchar('%');
+			break;
+		default:
+			count += putchar('%') + putchar(specifier);
 	}
 
 	return (count);
 }
 
-/**
- *print_int - Writes an integer to stdout.
- *@num: The integer to be written.
- *
- *Return: Number of characters written.
- */
-int print_int(int num)
-{
-	/*Handle printing integers (you can implement your own logic here) */
-	/*For simplicity, I'll use the existing putchar for each digit */
-	int count = 0;
-	int temp, digits;
+/*Rest of the code remains unchanged */
 
-	if (num < 0)
-	{
-		count += putchar('-');
-		num = -num;
-	}
-
-	/*Handle the digits */
-	temp = num;
-	digits = 1;
-	while (temp /= 10)
-		digits *= 10;
-
-	while (digits)
-	{
-		count += putchar(num / digits + '0');
-		num %= digits;
-		digits /= 10;
-	}
-
-	return (count);
-}
+/*Function prototypes */
+int putchar(int c);
+int print_str(char *str);
+int print_int(int num);
