@@ -33,6 +33,10 @@ int _printf(const char *format, ...)
 				case 's':
 					count += print_str(va_arg(args, char *));
 					break;
+				case 'd':
+				case 'i':
+					count += print_int(va_arg(args, int));
+					break;
 				case '%':
 					count += putchar('%');
 					break;
@@ -78,6 +82,41 @@ int print_str(char *str)
 	{
 		count += putchar(*str);
 		++str;
+	}
+
+	return (count);
+}
+
+/**
+ *print_int - Writes an integer to stdout.
+ *@num: The integer to be written.
+ *
+ *Return: Number of characters written.
+ */
+int print_int(int num)
+{
+	/*Handle printing integers (you can implement your own logic here) */
+	/*For simplicity, I'll use the existing putchar for each digit */
+	int count = 0;
+	int temp, digits;
+
+	if (num < 0)
+	{
+		count += putchar('-');
+		num = -num;
+	}
+
+	/*Handle the digits */
+	temp = num;
+	digits = 1;
+	while (temp /= 10)
+		digits *= 10;
+
+	while (digits)
+	{
+		count += putchar(num / digits + '0');
+		num %= digits;
+		digits /= 10;
 	}
 
 	return (count);
